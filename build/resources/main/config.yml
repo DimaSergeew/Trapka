@@ -1,0 +1,63 @@
+# Конфигурация плагина Trapka
+
+# Настройки ловушки
+trap:
+  # Размер ловушки (нечетное число для более удобного центрирования)
+  size: 5
+  # Время существования ловушки в секундах
+  duration: 30
+  # Кулдаун использования ловушки в секундах
+  cooldown: 60
+  # Материал блоков ловушки
+  material: GLASS
+  # Черный список блоков, которые не будут заменены ловушкой
+  blacklisted_blocks:
+    - BEDROCK
+    - OBSIDIAN
+    - END_PORTAL_FRAME
+    - ENDER_CHEST
+    - CHEST
+    - TRAPPED_CHEST
+    - BARREL
+    - SHULKER_BOX
+  # Настройки WorldGuard
+  worldguard:
+    # Включить интеграцию с WorldGuard
+    enabled: true
+    # Проверять флаг PVP в регионах
+    check_pvp: true
+  # Разрешенные регионы WorldGuard (работает только при наличии WorldGuard)
+  allowed_regions:
+    - pvp
+    - arena
+    - trap_allowed
+  # Блокировать использование эндер-перлов в ловушке
+  block_enderpearls: true
+  # Выводить отладочную информацию при восстановлении блоков
+  debug_mode: false
+
+# Настройки платформы
+platform:
+  # Размер платформы (нечетное число для более удобного центрирования)
+  size: 5
+  # Время существования платформы в секундах
+  duration: 15
+  # Время на размещение платформ в секундах
+  selection_time: 10
+  # Максимальное количество платформ
+  max_count: 5
+  # Кулдаун использования платформы в секундах
+  cooldown: 45
+  # Материал блоков платформы
+  material: STONE_BRICKS
+  # Настройки WorldGuard
+  worldguard:
+    # Включить интеграцию с WorldGuard
+    enabled: true
+    # Проверять флаг BUILD в регионах
+    check_build: true
+  # Разрешенные регионы WorldGuard для платформ (работает только при наличии WorldGuard)
+  allowed_regions:
+    - platform_allowed
+    - arena
+    - pvp 

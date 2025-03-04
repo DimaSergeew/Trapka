@@ -1,0 +1,53 @@
+name: Trapka
+description: 'Плагин, добавляющий специальные предметы: Ловушка и Платформа'
+version: '1.1'
+main: org.example.bedepay.trapka.Trapka
+api-version: '1.21'
+authors: [ bedepay ]
+# Добавляем зависимость от WorldGuard
+softdepend: [WorldGuard, WorldEdit]
+
+commands:
+  trapka:
+    description: 'Главная команда плагина Trapka'
+    usage: '/trapka [trap|platform] <игрок> <количество>'
+    permission: 'trapka.admin'
+    
+permissions:
+  trapka.admin:
+    description: 'Доступ к командам администратора плагина'
+    default: op
+  trapka.trap.use:
+    description: 'Разрешение на использование ловушки'
+    default: true
+  trapka.platform.use:
+    description: 'Базовое разрешение на использование платформы (1 платформа)'
+    default: true
+  # Разрешения на использование нескольких платформ
+  trapka.platform.2:
+    description: 'Разрешение на использование до 2 платформ'
+    default: false
+  trapka.platform.3:
+    description: 'Разрешение на использование до 3 платформ'
+    default: false
+  trapka.platform.4:
+    description: 'Разрешение на использование до 4 платформ'
+    default: false  
+  trapka.platform.5:
+    description: 'Разрешение на использование до 5 платформ'
+    default: false
+  trapka.platform.6:
+    description: 'Разрешение на использование до 6 платформ'
+    default: false
+  trapka.platform.7:
+    description: 'Разрешение на использование до 7 платформ'
+    default: false
+  trapka.platform.8:
+    description: 'Разрешение на использование до 8 платформ'
+    default: false
+  trapka.platform.9:
+    description: 'Разрешение на использование до 9 платформ'
+    default: false
+  trapka.platform.10:
+    description: 'Разрешение на использование до 10 платформ'
+    default: false
