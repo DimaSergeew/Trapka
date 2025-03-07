@@ -81,11 +81,26 @@ public class WorldGuardUtils {
             return true;
         }
         
-        // Проверяем, находится ли локация в разрешенном регионе
+        // Проверяем на наличие наложения регионов
+        boolean hasAllowedRegion = false;
+        boolean hasOtherRegion = false;
+        
         for (ProtectedRegion region : regions) {
             if (allowedRegions.contains(region.getId())) {
-                return true;
+                hasAllowedRegion = true;
+            } else {
+                hasOtherRegion = true;
             }
+        }
+        
+        // Если есть разрешенный регион и другие регионы одновременно - не разрешаем
+        if (hasAllowedRegion && hasOtherRegion) {
+            return false;
+        }
+        
+        // Если есть только разрешенный регион - разрешаем
+        if (hasAllowedRegion) {
+            return true;
         }
         
         // Проверяем флаг PVP (если PVP разрешен в регионе, то разрешаем использование ловушки)
@@ -126,11 +141,26 @@ public class WorldGuardUtils {
             return true;
         }
         
-        // Проверяем, находится ли локация в разрешенном регионе
+        // Проверяем на наличие наложения регионов
+        boolean hasAllowedRegion = false;
+        boolean hasOtherRegion = false;
+        
         for (ProtectedRegion region : regions) {
             if (allowedRegions.contains(region.getId())) {
-                return true;
+                hasAllowedRegion = true;
+            } else {
+                hasOtherRegion = true;
             }
+        }
+        
+        // Если есть разрешенный регион и другие регионы одновременно - не разрешаем
+        if (hasAllowedRegion && hasOtherRegion) {
+            return false;
+        }
+        
+        // Если есть только разрешенный регион - разрешаем
+        if (hasAllowedRegion) {
+            return true;
         }
         
         // Проверяем флаг BUILD (если строительство разрешено в регионе, то разрешаем использование платформы)

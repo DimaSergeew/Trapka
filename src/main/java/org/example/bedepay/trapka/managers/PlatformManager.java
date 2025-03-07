@@ -184,13 +184,13 @@ public class PlatformManager {
         // Проверяем наличие предмета платформы в инвентаре игрока
         ItemStack itemInHand = player.getInventory().getItemInMainHand();
         if (!plugin.getNbtUtils().isPlatformItem(itemInHand)) {
-            player.sendMessage(Component.text("§cУ вас нет предмета платформы в руке!"));
+            player.sendMessage(plugin.getMessageManager().getPlatformNeedInHandMessage());
             return false;
         }
         
         // Проверяем расположение в разрешенном регионе
         if (!plugin.getWorldGuardUtils().canUsePlatformAtLocation(location, player)) {
-            player.sendMessage(Component.text("§cВы не можете использовать платформу в этом регионе!"));
+            player.sendMessage(plugin.getMessageManager().getPlatformRegionNotAllowedMessage());
             return false;
         }
         
@@ -201,7 +201,7 @@ public class PlatformManager {
         
         // Проверяем разрешение на использование платформы
         if (!player.hasPermission("trapka.platform.use")) {
-            player.sendMessage(Component.text("§cУ вас нет прав на использование платформы!"));
+            player.sendMessage(plugin.getMessageManager().getPlatformNoPermissionUseMessage());
             return false;
         }
         
@@ -212,7 +212,7 @@ public class PlatformManager {
         List<Block> blocks = createPlatform(platformLocation, platformSize, platformMaterial);
         
         if (blocks.isEmpty()) {
-            player.sendMessage(Component.text("§cНевозможно создать платформу в этом месте!"));
+            player.sendMessage(plugin.getMessageManager().getPlatformCannotCreateMessage());
             return false;
         }
         
@@ -221,7 +221,7 @@ public class PlatformManager {
         if (session != null) {
             // Проверяем, не превышен ли лимит платформ
             if (session.getPlatformsPlaced() >= session.getMaxPlatforms()) {
-                player.sendMessage(Component.text("§cВы уже разместили максимальное количество платформ!"));
+                player.sendMessage(plugin.getMessageManager().getPlatformMaxPlatformsMessage());
                 return false;
             }
             
@@ -237,13 +237,13 @@ public class PlatformManager {
             
             // Если достигли максимального количества, завершаем сессию
             if (session.getPlatformsPlaced() >= session.getMaxPlatforms()) {
-                player.sendMessage(Component.text("§aВы разместили все доступные платформы!"));
+                player.sendMessage(plugin.getMessageManager().getPlatformAllPlacedMessage());
                 // Завершаем сессию досрочно, так как все платформы размещены
                 endSession(playerId);
             } else {
                 // Иначе сообщаем, сколько осталось
                 int remaining = session.getMaxPlatforms() - session.getPlatformsPlaced();
-                player.sendMessage(Component.text("§aПлатформа размещена! §7Осталось: §e" + remaining + "§7."));
+                player.sendMessage(plugin.getMessageManager().getPlatformPlacedInfoMessage(remaining));
             }
         } else {
             // Если нет активной сессии, то уменьшаем количество предметов в руке игрока
@@ -258,14 +258,11 @@ public class PlatformManager {
         UUID platformId = UUID.randomUUID();
         platformBlocks.put(platformId, blocks);
         
-        // Воспроизводим звуковой эффект
-        player.playSound(platformLocation, Sound.BLOCK_STONE_PLACE, 1.0f, 1.0f);
-        
-        // Добавляем световые эффекты
-        platformLocation.getWorld().spawnParticle(Particle.FLAME, platformLocation.clone().add(0, 0.5, 0), 30, 1.5, 0.1, 1.5, 0.02);
+        // Воспроизводим эффекты создания платформы
+        plugin.getEffectsUtils().playPlatformCreateEffects(platformLocation);
         
         // Отправляем сообщение игроку
-        player.sendMessage(Component.text("§aПлатформа создана! §7Она исчезнет через §e" + platformDuration + "§7 секунд."));
+        player.sendMessage(plugin.getMessageManager().getPlatformCreatedMessage(platformDuration));
         
         // Запускаем таймер для удаления платформы
         BukkitTask task = new BukkitRunnable() {
@@ -273,7 +270,7 @@ public class PlatformManager {
             public void run() {
                 // Удаляем платформу
                 removePlatform(platformId);
-                player.sendMessage(Component.text("§7Ваша платформа исчезла!"));
+                player.sendMessage(plugin.getMessageManager().getPlatformDisappearedMessage());
             }
         }.runTaskLater(plugin, platformDuration * 20L);
         
@@ -374,6 +371,33 @@ public class PlatformManager {
     public void removePlatform(UUID platformId) {
         List<Block> blocks = platformBlocks.get(platformId);
         if (blocks == null) return;
+        
+        // Вычисляем центр платформы для эффектов
+        Location center = null;
+        if (!blocks.isEmpty()) {
+            int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
+            int maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE, maxZ = Integer.MIN_VALUE;
+            
+            for (Block block : blocks) {
+                minX = Math.min(minX, block.getX());
+                minY = Math.min(minY, block.getY());
+                minZ = Math.min(minZ, block.getZ());
+                maxX = Math.max(maxX, block.getX());
+                maxY = Math.max(maxY, block.getY());
+                maxZ = Math.max(maxZ, block.getZ());
+            }
+            
+            int centerX = (minX + maxX) / 2;
+            int centerY = (minY + maxY) / 2;
+            int centerZ = (minZ + maxZ) / 2;
+            
+            center = new Location(blocks.get(0).getWorld(), centerX + 0.5, centerY + 0.5, centerZ + 0.5);
+        }
+        
+        // Воспроизводим эффекты удаления платформы
+        if (center != null) {
+            plugin.getEffectsUtils().playPlatformRemoveEffects(center);
+        }
         
         // Восстанавливаем блоки (в реальной реализации нужно сохранять их исходное состояние)
         for (Block block : blocks) {

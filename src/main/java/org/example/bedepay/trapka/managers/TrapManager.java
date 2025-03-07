@@ -59,25 +59,25 @@ public class TrapManager implements Listener {
         // Проверяем, не находится ли атакующий в кулдауне
         if (isOnCooldown(attacker.getUniqueId())) {
             long remainingTime = getRemainingCooldown(attacker.getUniqueId());
-            attacker.sendMessage(Component.text("§cВы не можете использовать ловушку ещё " + remainingTime + " секунд!"));
+            attacker.sendMessage(plugin.getMessageManager().getTrapOnCooldownMessage(remainingTime));
             return false;
         }
         
         // Проверяем, находятся ли игроки в одном мире
         if (!attacker.getWorld().equals(target.getWorld())) {
-            attacker.sendMessage(Component.text("§cЦель находится в другом мире!"));
+            attacker.sendMessage(plugin.getMessageManager().getTrapTargetDifferentWorldMessage());
             return false;
         }
         
         // Проверяем WorldGuard регионы (заглушка, реальная интеграция требует подключения WorldGuard API)
         if (!checkRegion(target.getLocation(), attacker)) {
-            attacker.sendMessage(Component.text("§cВы не можете создать ловушку в этом регионе!"));
+            attacker.sendMessage(plugin.getMessageManager().getTrapRegionNotAllowedMessage());
             return false;
         }
         
         // Проверяем, находится ли атакующий уже в какой-либо ловушке
         if (isPlayerTrapped(attacker)) {
-            attacker.sendMessage(Component.text("§cВы не можете активировать ловушку, находясь внутри другой ловушки!"));
+            attacker.sendMessage(plugin.getMessageManager().getTrapAlreadyTrappedMessage());
             return false;
         }
         
@@ -95,7 +95,7 @@ public class TrapManager implements Listener {
         List<Block> blocks = createTrapCube(centerLocation, trapSize, trapMaterial, blacklistedBlocks, trapId);
         
         if (blocks.isEmpty()) {
-            attacker.sendMessage(Component.text("§cНевозможно создать ловушку в этом месте!"));
+            attacker.sendMessage(plugin.getMessageManager().getTrapCannotCreateMessage());
             return false;
         }
         
@@ -110,21 +110,20 @@ public class TrapManager implements Listener {
         trapped.add(target);
         trappedPlayers.put(trapId, trapped);
         
-        // Добавляем эффект при активации ловушки
-        attacker.getWorld().spawnParticle(Particle.DRAGON_BREATH, attacker.getLocation(), 50, 0.5, 1, 0.5, 0.05);
-        attacker.getWorld().playSound(attacker.getLocation(), Sound.ENTITY_ILLUSIONER_CAST_SPELL, 1.0f, 0.8f);
+        // Воспроизводим эффекты создания ловушки
+        plugin.getEffectsUtils().playTrapCreateEffects(centerLocation, trapped);
         
         // Отправляем заголовок игрокам
         Title title = Title.title(
-                Component.text("§cВас поймали в ловушку!"),
-                Component.text("§7Ловушка исчезнет через " + trapDuration + " секунд"),
+                plugin.getMessageManager().getTrapTargetTrappedMessage(),
+                plugin.getMessageManager().getTrapWillDisappearMessage(trapDuration),
                 Title.Times.times(Duration.ofMillis(500), Duration.ofMillis(2000), Duration.ofMillis(500))
         );
         target.showTitle(title);
         
         // Создаем полоску босса
         BossBar bossBar = BossBar.bossBar(
-                Component.text("Ловушка исчезнет через: " + trapDuration + " секунд"),
+                plugin.getMessageManager().getTrapBossBarTitle(trapDuration),
                 1.0f,
                 BossBar.Color.RED,
                 BossBar.Overlay.PROGRESS
@@ -156,7 +155,7 @@ public class TrapManager implements Listener {
                 // Обновляем полоску босса
                 float progress = (float) timeLeft / trapDuration;
                 bossBar.progress(progress);
-                bossBar.name(Component.text("Ловушка исчезнет через: " + timeLeft + " секунд"));
+                bossBar.name(plugin.getMessageManager().getTrapBossBarTitle(timeLeft));
                 
                 // Добавляем только звуковой эффект, который становится выше к концу
                 if (timeLeft % 5 == 0 || timeLeft <= 3) {
@@ -331,12 +330,15 @@ public class TrapManager implements Listener {
         // Телепортируем игроков на безопасную локацию перед восстановлением блоков
         List<Player> players = trappedPlayers.get(trapId);
         if (players != null && safeLocation != null) {
+            // Воспроизводим эффекты удаления ловушки
+            plugin.getEffectsUtils().playTrapRemoveEffects(safeLocation, players);
+            
             for (Player player : players) {
                 if (player.isOnline()) {
                     // Телепортируем игрока немного выше центра ловушки, чтобы избежать застревания
                     Location teleportLoc = safeLocation.clone().add(0, 1, 0);
                     player.teleport(teleportLoc);
-                    player.sendMessage(Component.text("§aЛовушка исчезла!"));
+                    player.sendMessage(plugin.getMessageManager().getTrapDisappearedMessage());
                     if (plugin.getConfigManager().isDebugMode()) {
                         plugin.getLogger().info("Телепортирован игрок: " + player.getName() + " на " + teleportLoc.getX() + "," + teleportLoc.getY() + "," + teleportLoc.getZ());
                     }

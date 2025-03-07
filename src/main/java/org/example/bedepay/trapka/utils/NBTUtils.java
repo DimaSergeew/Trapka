@@ -47,11 +47,19 @@ public class NBTUtils {
         meta.getPersistentDataContainer().set(trapKey, PersistentDataType.INTEGER, 1);
         
         // Устанавливаем имя и описание предмета
-        meta.displayName(Component.text("Ловушка").decoration(TextDecoration.ITALIC, false));
+        meta.displayName(Component.text("§c§l✧ Магическая Ловушка ✧").decoration(TextDecoration.ITALIC, false));
         
         List<Component> lore = new ArrayList<>();
-        lore.add(Component.text("Нажмите на игрока, чтобы создать ловушку").decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("Кулдаун: " + plugin.getConfigManager().getTrapCooldown() + " секунд").decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("").decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("§7Создаёт временную клетку из блоков").decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("§7вокруг указанного игрока.").decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("").decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("§8» §eРазмер§7: §f" + plugin.getConfigManager().getTrapSize() + "x" + plugin.getConfigManager().getTrapSize() + "x" + plugin.getConfigManager().getTrapSize()).decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("§8» §eДлительность§7: §f" + plugin.getConfigManager().getTrapDuration() + " сек.").decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("§8» §eПерезарядка§7: §f" + plugin.getConfigManager().getTrapCooldown() + " сек.").decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("").decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("§6✧ §eНажмите на игрока§6, чтобы активировать §6✧").decoration(TextDecoration.ITALIC, false));
+        
         meta.lore(lore);
         
         // Добавляем эффект зачарования для подсветки
@@ -75,14 +83,19 @@ public class NBTUtils {
         ItemMeta meta = item.getItemMeta();
         
         // Устанавливаем имя и описание предмета
-        meta.displayName(Component.text("§b§lПлатформа").decoration(TextDecoration.ITALIC, false));
+        meta.displayName(Component.text("§b§l☼ Магическая Платформа ☼").decoration(TextDecoration.ITALIC, false));
         
         List<Component> lore = new ArrayList<>();
-        lore.add(Component.text("§7Создает магическую платформу под ногами").decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("§7Длительность: §e" + plugin.getConfigManager().getPlatformDuration() + " сек.").decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("§7Размер: §e" + plugin.getConfigManager().getPlatformSize() + "x" + plugin.getConfigManager().getPlatformSize()).decoration(TextDecoration.ITALIC, false));
         lore.add(Component.text("").decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("§eПравый клик§7, чтобы создать платформу").decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("§7Создаёт временную платформу из блоков").decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("§7в указанном направлении.").decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("").decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("§8» §eРазмер§7: §f" + plugin.getConfigManager().getPlatformSize() + "x" + plugin.getConfigManager().getPlatformSize()).decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("§8» §eДлительность§7: §f" + plugin.getConfigManager().getPlatformDuration() + " сек.").decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("§8» §eМакс. количество§7: §f" + plugin.getConfigManager().getPlatformMaxCount()).decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("§8» §eПерезарядка§7: §f" + plugin.getConfigManager().getPlatformCooldown() + " сек.").decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("").decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("§3☼ §bПравый клик§3, чтобы активировать §3☼").decoration(TextDecoration.ITALIC, false));
         
         meta.lore(lore);
         

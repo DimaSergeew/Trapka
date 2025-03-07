@@ -35,6 +35,36 @@ trap:
   block_enderpearls: true
   # Выводить отладочную информацию при восстановлении блоков
   debug_mode: false
+  # Настройки эффектов ловушки
+  effects:
+    # Звуковые эффекты
+    sounds:
+      # Включить звуки
+      enabled: true
+      # Звук при создании ловушки
+      create: ENTITY_ENDERMAN_TELEPORT
+      # Громкость звука создания (0.0-1.0)
+      create_volume: 1.0
+      # Высота звука создания (0.5-2.0)
+      create_pitch: 1.0
+      # Звук при удалении ловушки
+      remove: BLOCK_GLASS_BREAK
+      # Громкость звука удаления (0.0-1.0)
+      remove_volume: 1.0
+      # Высота звука удаления (0.5-2.0)
+      remove_pitch: 1.0
+    # Визуальные эффекты (частицы)
+    particles:
+      # Включить частицы
+      enabled: true
+      # Тип частиц при создании ловушки
+      create: SPELL_WITCH
+      # Количество частиц при создании
+      create_count: 50
+      # Тип частиц при удалении ловушки
+      remove: CLOUD
+      # Количество частиц при удалении
+      remove_count: 30
 
 # Настройки платформы
 platform:
@@ -61,3 +91,93 @@ platform:
     - platform_allowed
     - arena
     - pvp 
+  # Настройки эффектов платформы
+  effects:
+    # Звуковые эффекты
+    sounds:
+      # Включить звуки
+      enabled: true
+      # Звук при создании платформы
+      create: BLOCK_STONE_PLACE
+      # Громкость звука создания (0.0-1.0)
+      create_volume: 1.0
+      # Высота звука создания (0.5-2.0)
+      create_pitch: 0.8
+      # Звук при удалении платформы
+      remove: BLOCK_STONE_BREAK
+      # Громкость звука удаления (0.0-1.0)
+      remove_volume: 1.0
+      # Высота звука удаления (0.5-2.0)
+      remove_pitch: 0.8
+    # Визуальные эффекты (частицы)
+    particles:
+      # Включить частицы
+      enabled: true
+      # Тип частиц при создании платформы
+      create: CRIT
+      # Количество частиц при создании
+      create_count: 40
+      # Тип частиц при удалении платформы
+      remove: EXPLOSION_NORMAL
+      # Количество частиц при удалении
+      remove_count: 20
+
+# Настройки сообщений
+messages:
+  prefix: "&6[Trapka] &r"
+  
+  # Общие сообщения
+  no_permission: "{prefix}&cУ вас нет прав на использование этой команды!"
+  player_not_found: "{prefix}&cИгрок '{player}' не найден или не в сети!"
+  invalid_amount: "{prefix}&cНекорректное количество: {amount}"
+  config_reloaded: "{prefix}&aКонфигурация плагина Trapka успешно перезагружена!"
+  
+  # Сообщения ловушки
+  trap:
+    on_cooldown: "{prefix}&cВы не можете использовать ловушку ещё {time} секунд!"
+    target_different_world: "{prefix}&cЦель находится в другом мире!"
+    region_not_allowed: "{prefix}&cВы не можете создать ловушку в этом регионе!"
+    already_trapped: "{prefix}&cВы не можете активировать ловушку, находясь внутри другой ловушки!"
+    cannot_create: "{prefix}&cНевозможно создать ловушку в этом месте!"
+    target_trapped: "{prefix}&cВас поймали в ловушку!"
+    trap_will_disappear: "{prefix}&7Ловушка исчезнет через {time} секунд"
+    bossbar_title: "Ловушка исчезнет через: {time} секунд"
+    trap_disappeared: "{prefix}&aЛовушка исчезла!"
+    cannot_break_block: "{prefix}&cВы не можете разрушить блок ловушки!"
+    cannot_use_enderpearl: "{prefix}&cВы не можете использовать эндер-перлы внутри ловушки!"
+    cannot_use_chorus: "{prefix}&cВы не можете использовать хорус внутри ловушки!"
+    no_permission_use: "{prefix}&cУ вас нет прав на использование ловушки!"
+    item_modified: "{prefix}&cВы не можете изменять этот предмет!"
+    given_to_player: "{prefix}&aВы выдали &e{amount} ловушек&a игроку &e{player}&a!"
+    received: "{prefix}&aВы получили &e{amount} ловушек&a!"
+    usage: "{prefix}&cИспользование: /trapka trap <игрок> [количество]"
+    
+  # Сообщения платформы
+  platform:
+    active_session: "{prefix}&cУ вас уже есть активная сессия размещения платформ!"
+    on_cooldown: "{prefix}&cВы можете создать следующую платформу через &e{time} &cсекунд!"
+    need_in_hand: "{prefix}&cВы должны держать платформу в руке!"
+    not_enough_items: "{prefix}&cУ вас недостаточно предметов платформы!"
+    mode_activated: "{prefix}&aРежим размещения платформ активирован!"
+    placement_info: "{prefix}&7У вас есть &e{time} секунд&7 на размещение &e{count} платформ&7."
+    time_expired: "{prefix}&cВремя размещения платформ истекло!"
+    time_left: "{prefix}&cОсталось &e{time} секунд&c на размещение платформ!"
+    no_permission_use: "{prefix}&cУ вас нет прав на использование платформы!"
+    region_not_allowed: "{prefix}&cВы не можете использовать платформу в этом регионе!"
+    cannot_create: "{prefix}&cНевозможно создать платформу в этом месте!"
+    max_platforms: "{prefix}&cВы уже разместили максимальное количество платформ!"
+    all_placed: "{prefix}&aВы разместили все доступные платформы!"
+    placed_info: "{prefix}&aПлатформа размещена! &7Осталось: &e{remaining}&7."
+    created: "{prefix}&aПлатформа создана! &7Она исчезнет через &e{time}&7 секунд."
+    disappeared: "{prefix}&7Ваша платформа исчезла!"
+    session_ended: "{prefix}&7Сессия размещения платформ завершена!"
+    usage: "{prefix}&cИспользование: /trapka platform <игрок> [количество]"
+    given_to_player: "{prefix}&aВы выдали &e{amount} платформ&a игроку &e{player}&a!"
+    received: "{prefix}&aВы получили &e{amount} платформ&a!"
+    
+  # Сообщения помощи
+  help:
+    header: "&6=== Помощь по плагину Trapka ==="
+    trap_command: "&e/trapka trap <игрок> [количество] &7- Выдать ловушку"
+    platform_command: "&e/trapka platform <игрок> [количество] &7- Выдать платформу"
+    reload_command: "&e/trapka reload &7- Перезагрузить конфигурацию" 
